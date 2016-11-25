@@ -11,6 +11,7 @@ class AlphabetGenerator {
 			my.timeUpdate();
 			window.setTimeout(update, 50);
 		}, 50);
+		this._morse_chars = "EL";
 		this._morse = new MorseGenerator();
 		this._playing = false;
 		this.times = {};
@@ -61,8 +62,11 @@ class AlphabetGenerator {
 		var m = c.match(/^M(.)/);
 		if (this._playing || this._paused) {
 			this._queue.push(c);
+			return;
 		} else if (m) {
 			this.pause(this._morse.keyString(m[1]));
+		} else if (c == ",") {
+			this.pause(.5);
 		} else if (c == " ") {
 			this.pause(1);
 		} else if (c.match(/[.!?]/)) {
@@ -70,10 +74,11 @@ class AlphabetGenerator {
 		} else {
 			this.playSprite(c);
 		}
+		console.log(c);
 	}
 
 	playSprite(key) {
-		if (!this.times[key]) return;
+		if (!this.times[key]) return this.shiftQueue();
 		var [start, end] = this.times[key];
 		this.audio.src = this.audio.src;
 		this.audio.playbackRate = this._playback_rate;
@@ -106,10 +111,11 @@ class AlphabetGenerator {
 	}
 
 	keyString(str) {
+		str = str.toUpperCase();
 		if (!this._audio_loaded) return this._audio_queue.push(str);
 		for (let c of str) {
-			this.playChar(c);
-			this.playChar('M'+c);
+			if (this._morse_chars.includes(c)) this.playChar('M'+c);
+			else this.playChar(c);
 		}
 	}
 
