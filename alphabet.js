@@ -4,14 +4,9 @@ class AlphabetGenerator {
 		this._playback_rate = 2;
 		this.audio = document.getElementById('nato-alphabet');
 		var my = this;
-		this.audio.addEventListener('loadeddata', function(ev) {
-			my.audioLoaded();
-		});
-		window.setTimeout(function update() {
-			my.timeUpdate();
-			window.setTimeout(update, 50);
-		}, 50);
-		this._morse_chars = "EL";
+		this.audio.addEventListener('loadeddata', () => this.audioLoaded());
+		setTimeout(() => this.timeUpdate(), 50);
+		this._morse_chars = "";
 		this._morse = new MorseGenerator();
 		this._playing = false;
 		this.times = {};
@@ -44,6 +39,7 @@ class AlphabetGenerator {
 				this.shiftQueue();
 			}
 		}
+		setTimeout(() => this.timeUpdate(), 50);
 	}
 
 	shiftQueue() {
