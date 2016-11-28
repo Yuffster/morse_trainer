@@ -1,0 +1,44 @@
+.card {
+	text-align: center;
+}
+
+.card .dot,.card .dash {
+	font-weight: bold;
+	font-size: 500%;
+	padding: 0 25px;
+}
+
+body.inactive .card .guess .inactive {
+	display: block;
+}
+
+body.inactive .card .guess .pressKey {
+	display: none;
+}
+
+.card .guess .inactive {
+	display: none;
+}
+
+.card.answer .answer, .card.guess .guess {
+	display: block;
+}
+
+.card .answer,.card .guess {
+	display: none;
+}
+
+.card .answer {
+	font-size: 200%;
+	text-align: center;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+
+.card .answer em {
+	font-weight: bold;
+}
+
+audio#nato-alphabet {
+	display: none;
+}

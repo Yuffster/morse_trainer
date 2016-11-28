@@ -1,10 +1,37 @@
-<h1>Morse Trainer</h1>
+<head>
+	<title>ditditdot</title>
+	<link rel="stylesheet" href="./styles/main.css" />
+</head>
+
+<body>
 
 <script src="js/morse.js"></script>
 <script src="js/alphabet.js"></script>
 <script src="js/flashcards.js"></script>
+<script src="js/ui.js"></script>
 
-<img src="morse_chart.jpg"/>
+<div id="ui">
+
+	<div class="card guess">
+		<div class="morse">
+			<span class="dot">.</span>
+			<span class="dot">.</span>
+			<span class="dash">&mdash;</span>
+			<span class="dot">.</span>
+		</div>
+		<div class="guess">
+			<div class="inactive">
+				Click on widow to make guesses.
+			</div>
+			<div class="pressKey">
+				Press any key to guess.
+			</div>
+		</div>
+		<div class="answer"><em>F</em>oxtrot</div>
+	</div>
+
+</div>
+
 <br/>
 <audio preload="auto" controls id="nato-alphabet" src="nato.ogg" type="audio/ogg">
 </audio>
@@ -14,6 +41,6 @@
 
 
 <script>
-	//var r = new Reader('ABCDFGHIJKLMNPQRSTUVWXYZ', position=0, 'ABCDFGHIJKLMNPQRSTUVWXYZ');
 	var f = new FlashCards();
 </script>
+</body>
