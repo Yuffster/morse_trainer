@@ -21,7 +21,7 @@ class AlphabetGenerator {
 	audioLoaded() {
 		this._audio_loaded = true;
 		for (let msg of this._audio_queue) {
-			this.spellString(msg);
+			this.keyString(msg);
 		} this._audio_queue = [];
 	}
 
@@ -45,6 +45,8 @@ class AlphabetGenerator {
 	shiftQueue() {
 		if (this._queue.length > 0) {
 			this.playChar(this._queue.shift());
+		} else {
+			this.boop(8);
 		}
 	}
 
@@ -61,6 +63,7 @@ class AlphabetGenerator {
 			return;
 		} else if (m) {
 			this.pause(this._morse.keyString(m[1]));
+			c = m[1];
 		} else if (c == ",") {
 			this.pause(.5);
 		} else if (c == " ") {
@@ -70,13 +73,11 @@ class AlphabetGenerator {
 		} else {
 			this.playSprite(c);
 		}
-		console.log(c);
 	}
 
 	playSprite(key) {
 		if (!this.times[key]) return this.shiftQueue();
 		var [start, end] = this.times[key];
-		this.audio.src = this.audio.src;
 		this.audio.playbackRate = this._playback_rate;
 		this.audio.currentTime = start;
 		this._stop_time = end;
@@ -97,6 +98,14 @@ class AlphabetGenerator {
 		}
 	}
 
+	boop(time) {
+		if (this.booped) return;
+		this._morse.on(time);
+		this.pause(time);
+		window.setTimeout(this.onBoop, time*1000);
+		this.booped = true;
+	}
+
 	parseTime(time) {
 		var times = [];
 		for (let t of time.split(' --> ')) {
@@ -107,11 +116,12 @@ class AlphabetGenerator {
 	}
 
 	keyString(str) {
+		this.booped = false;
 		str = str.toUpperCase();
 		if (!this._audio_loaded) return this._audio_queue.push(str);
 		for (let c of str) {
-			if (this._morse_chars.includes(c)) this.playChar('M'+c);
-			else this.playChar(c);
+			this.playChar('M'+c);
+			this.playChar('.');
 		}
 	}
 
