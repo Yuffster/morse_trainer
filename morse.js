@@ -37,8 +37,8 @@ const MorseCodes = {
 }
 
 class MorseGenerator {
-	constructor(){
-		const context_name = '_MORSE_AUDIO_CONTEXT'
+	constructor(rate=0.05){
+		const context_name = '_MORSE_AUDIO_CONTEXT';
 		var ac = window[context_name] || new window.AudioContext();
 		window[context_name] = ac;
 		var vol = ac.createGain();
@@ -50,9 +50,9 @@ class MorseGenerator {
 		this._vol = vol;
 		this._vol.gain.value = 0;
 		this._context = ac;
-		this._rate = .05;
+		this._rate = rate;
 		this._queued_time = 0;
-		this._max_vol = .2;
+		this._max_vol = .5;
 	}
 	char(c) {
 		var code = MorseCodes[c.toUpperCase()];
