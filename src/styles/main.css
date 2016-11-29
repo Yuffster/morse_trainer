@@ -8,15 +8,30 @@
 	padding: 0 25px;
 }
 
-body.inactive .card .guess .inactive {
-	display: block;
+body.inactive #big-modal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, .2);
 }
 
-body.inactive .card .guess .pressKey {
+body.inactive .card .guess .inactive {
+	display: block;
+	text-shadow: none;
+	color:;
+}
+
+body.active #big-modal {
 	display: none;
 }
 
-.card .guess .inactive {
+body.active .card .guess .inactive {
+	display: none;
+}
+
+body.inactive .card .guess .pressKey {
 	display: none;
 }
 

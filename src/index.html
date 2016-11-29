@@ -3,17 +3,30 @@
 	<link rel="stylesheet" href="./styles/main.css" />
 </head>
 
-<body>
+<body class="inactive">
 
+<script src="js/events.js"></script>
 <script src="js/morse.js"></script>
 <script src="js/alphabet.js"></script>
 <script src="js/flashcards.js"></script>
 <script src="js/ui.js"></script>
 
-<div id="ui">
+<div class="controls">
+	<div class="on-off">
+		<a class="on" href="#start">Start</a>
+		<a class="off" href="#stop">Stop</a>
+	</div>
+	<div class="score">
+		<span id="ui_pass" class="pass">0</span>
+		/
+		<span id="ui_fail" class="fail">0</span>
+	</div>
+</div>
 
-	<div class="card guess">
-		<div class="morse">
+<div id="flashcards">
+
+	<div id="ui_card" class="card guess">
+		<div class="morse" id="ui_morse">
 			<span class="dot">.</span>
 			<span class="dot">.</span>
 			<span class="dash">&mdash;</span>
@@ -27,7 +40,7 @@
 				Press any key to guess.
 			</div>
 		</div>
-		<div class="answer"><em>F</em>oxtrot</div>
+		<div class="answer" id="ui_answer"><em>F</em>oxtrot</div>
 	</div>
 
 </div>
@@ -39,8 +52,8 @@
 <div id="reader-output">
 </div>
 
+<div id="big-modal"></div>
 
-<script>
-	var f = new FlashCards();
-</script>
+<script src="js/application.js"></script>
+
 </body>
