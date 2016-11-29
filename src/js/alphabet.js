@@ -167,7 +167,6 @@ class AlphabetGenerator  {
 			if (morse == true) this.playChar('M'+msg[i], cb);
 			else this.playChar(msg[i], cb);
 		}
-		console.log(this._queue);
 	}
 
 }
