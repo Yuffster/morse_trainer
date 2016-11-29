@@ -12,6 +12,16 @@ class UI {
 		this._pass = 0;
 		this._fail = 0;
 		this._answered = false;
+		this._guess_stage = 0;
+	}
+
+	get guessStage() {
+		return [
+			'fast',
+			'fast',
+			'repeat',
+			'answer'
+		][this._guess_stage];
 	}
 
 	start() {
@@ -49,20 +59,26 @@ class UI {
 	nextCard() {
 		if (!this._playing) return;
 		this._answered = false;
+		this._guess_stage = 0;
 		this.ui('card').classList.remove('answer');
 		this.ui('card').classList.remove('morse');
 		this.ui('card').classList.remove('pass');
 		this.ui('card').classList.remove('fail');
+		this.ui('guesstime').innerHTML = '';
 		var {char, morse} = this.flashcard.nextCard();
 		this.renderNato(char);
 		this.renderMorse(morse);
 		// Key and pause.
-		this.generator.key(char+'..', ()=> {
-			// Add Morse code.
+		this.generator.key(char, () => {
+			this._guess_stage = 1;
+		});
+		this.generator.key('..', ()=> {
+			this._guess_stage = 2;
 			this.ui('card').classList.add('morse');
 		});
 		// Key and pause.
 		this.generator.key(char+'..', ()=>{
+			this._guess_stage = 3;
 			// Show answer.
 			this.ui('card').classList.add('answer');
 		});
@@ -78,9 +94,24 @@ class UI {
 		this.ui('card').classList.add('answer');
 		this.ui('card').classList.add('morse');
 		var result = this.flashcard.guess(char);
-		if (result == -1) this.alert("Too late.");
-		if (result == 1) this.pass("Right!");
-		if (result == 0) this.fail("Wrong.");
+		var message = '';
+		if (result == 1) {
+			message = {
+				'fast': 'Excellent!',
+				'repeat': 'Good.',
+				'answer': "Ok."
+			}[this.guessStage];
+			this.pass();
+		}
+		else if (result == 0) {
+			this.fail();
+			message = {
+				'fast': 'Wrong.<br/>Remember take your time.',
+				'repeat': "Wrong.",
+				'answer': "Wrong."
+			}[this.guessStage];
+		}
+		this.ui('guesstime').innerHTML = message || '';
 	}
 
 	pass(message) {
