@@ -22,6 +22,10 @@ class Flashcards {
 		};
 	}
 
+	get answer() {
+		return this._answer;
+	}
+
 	addCharacter(c) {
 		this._blocks.push(c.toUpperCase());
 		this.generator.keyString(c);

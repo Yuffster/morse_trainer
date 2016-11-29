@@ -54,6 +54,14 @@ body.inactive .card .guess .pressKey {
 	font-weight: bold;
 }
 
+.card.pass {
+	color: green;
+}
+
+.card.fail {
+	color: red;
+}
+
 audio#nato-alphabet {
 	display: none;
 }
