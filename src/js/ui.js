@@ -6,7 +6,6 @@ class UI {
     		this.guessChar(evt.key);
 		});
 		this.generator = new AlphabetGenerator();
-		this.generator.onComplete = () => this.onGenerate();
 		this.nextCard();
 		this._pass = 0;
 		this._fail = 0;
@@ -22,17 +21,23 @@ class UI {
 
 	nextCard() {
 		this.ui('card').classList.remove('answer');
-		var stuff = this.flashcard.nextCard();
-		this.generator.key(stuff.char+'..', ()=> {
-			this.generator.key(stuff.char+'..', ()=> {
-				this.showAnswer();
-				this.generator.spell(stuff.char, ()=>{
-					
-				});
-			});
+		this.ui('card').classList.remove('morse');
+		var s = this.flashcard.nextCard();
+		this.renderNato(s.char);
+		this.renderMorse(s.morse);
+		// Key and pause.
+		this.generator.key(s.char+'..', ()=> {
+			// Add Morse code.
+			this.ui('card').classList.add('morse');
 		});
-		this.renderMorse(stuff.morse);
-		this.renderNato(stuff.char);
+		// Key and pause.
+		this.generator.key(s.char+'..', ()=>{
+			// Show answer.
+			this.ui('card').classList.add('answer');
+		});
+		this.generator.spell(s.char); // Spell out answer.
+		// Pause.
+		this.generator.spell('...', ()=>this.nextCard());
 	}
 
 	guessChar(char) {
@@ -40,10 +45,6 @@ class UI {
 		if (result == -1) this.alert("Too late.");
 		if (result == 1) this.pass("Right!");
 		if (result == 0) this.fail("Wrong.");
-	}
-
-	showAnswer() {
-		this.ui('card').classList.add('answer');
 	}
 
 	pass(message) {

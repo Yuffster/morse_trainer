@@ -57,13 +57,13 @@ class AlphabetGenerator  {
 			if (this._unpause_at < new Date().getTime()) {
 				this._paused = false;
 				this._unpause_at = false;
-				this.shiftQueue();
+				this.onComplete();
 			}
 		} else if (this._playing) { 
 			if (this.audio.currentTime > this._stop_time) {
 				this.audio.pause();
 				this._playing = false;
-				this.shiftQueue();
+				this.onComplete();
 			}
 		}
 		setTimeout(() => this.timeUpdate(), 50);
@@ -88,7 +88,7 @@ class AlphabetGenerator  {
 
 	playChar(c, cb) {
 		c = c.toUpperCase();
-		this._next_callback = false;
+		this._next_callback = cb;
 		var m = c.match(/^M(.)/);
 		if (this._playing || this._paused || !this._audio_loaded) {
 			this._queue.push([c, cb]);
@@ -107,9 +107,6 @@ class AlphabetGenerator  {
 			this.pause(2);
 		} else {
 			this.playSprite(c);
-		}
-		if (cb) {
-			this._next_callback = cb;
 		}
 	}
 

@@ -35,12 +35,12 @@ body.inactive .card .guess .pressKey {
 	display: none;
 }
 
-.card.answer .answer, .card.guess .guess {
-	display: block;
+.card.answer .answer,.card.morse .morse,.card.guess .guess {
+	opacity:1;
 }
 
-.card .answer,.card .guess {
-	display: none;
+.card .answer,.card .guess,.card .morse {
+	opacity:0;
 }
 
 .card .answer {
