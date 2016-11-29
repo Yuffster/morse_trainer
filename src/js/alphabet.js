@@ -1,4 +1,33 @@
-class AlphabetGenerator {
+const NATO_Alphabet = {
+	'A': 'Alpha',
+	'B': 'Bravo',
+	'C': 'Charlie',
+	'D': 'Delta',
+	'E': 'Echo',
+	'F': 'Foxtrot',
+	'G': 'Golf',
+	'H': 'Hotel',
+	'I': 'India',
+	'J': 'Juliet',
+	'K': 'Kilo',
+	'L': 'Lima',
+	'M': 'Mike',
+	'N': 'November',
+	'O': 'Oscar',
+	'P': 'Papa',
+	'Q': 'Quebec',
+	'R': 'Romeo',
+	'S': 'Sierra',
+	'T': 'Tango',
+	'U': 'Uniform',
+	'V': 'Victor',
+	'W': 'Whiskey',
+	'X': 'Xray',
+	'Y': 'Yankee',
+	'Z': 'Zulu'
+};
+
+class AlphabetGenerator  {
 
 	constructor() {
 		this._playback_rate = 2;
@@ -20,9 +49,7 @@ class AlphabetGenerator {
 
 	audioLoaded() {
 		this._audio_loaded = true;
-		for (let msg of this._audio_queue) {
-			this.keyString(msg);
-		} this._audio_queue = [];
+		this.shiftQueue();
 	}
 
 	timeUpdate() {
@@ -42,11 +69,15 @@ class AlphabetGenerator {
 		setTimeout(() => this.timeUpdate(), 50);
 	}
 
+	onComplete() {
+		if (this._next_callback) this._next_callback();
+		this.shiftQueue();
+	}
+
 	shiftQueue() {
 		if (this._queue.length > 0) {
-			this.playChar(this._queue.shift());
-		} else {
-			this.boop(8);
+			var [char, cb] = this._queue.shift();
+			this.playChar(char, cb);
 		}
 	}
 
@@ -55,15 +86,19 @@ class AlphabetGenerator {
 		this._unpause_at = new Date().getTime() + t * 1000;
 	}
 
-	playChar(c) {
+	playChar(c, cb) {
 		c = c.toUpperCase();
+		this._next_callback = false;
 		var m = c.match(/^M(.)/);
-		if (this._playing || this._paused) {
-			this._queue.push(c);
+		if (this._playing || this._paused || !this._audio_loaded) {
+			this._queue.push([c, cb]);
 			return;
-		} else if (m) {
+		} 
+		if (m && m[1] !== '.') {
 			this.pause(this._morse.keyString(m[1]));
 			c = m[1];
+		} else if (m && m[1] == '.' || c == ".") {
+			this.pause(1);
 		} else if (c == ",") {
 			this.pause(.5);
 		} else if (c == " ") {
@@ -73,10 +108,13 @@ class AlphabetGenerator {
 		} else {
 			this.playSprite(c);
 		}
+		if (cb) {
+			this._next_callback = cb;
+		}
 	}
 
 	playSprite(key) {
-		if (!this.times[key]) return this.shiftQueue();
+		if (!this.times[key]) return this.onComplete();
 		var [start, end] = this.times[key];
 		this.audio.playbackRate = this._playback_rate;
 		this.audio.currentTime = start;
@@ -115,14 +153,21 @@ class AlphabetGenerator {
 		return times;
 	}
 
-	keyString(str) {
-		this.booped = false;
-		str = str.toUpperCase();
-		if (!this._audio_loaded) return this._audio_queue.push(str);
-		for (let c of str) {
-			this.playChar('M'+c);
-			this.playChar('.');
+	key(msg, callback) {
+		this.playString(msg, callback, true);
+	}
+
+	spell(msg, callback) {
+		this.playString(msg, callback);
+	}
+
+	playString(msg, callback, morse=false) {
+		for (let i in msg) {
+			let cb = (i == msg.length - 1) ? callback : false;
+			if (morse == true) this.playChar('M'+msg[i], cb);
+			else this.playChar(msg[i], cb);
 		}
+		console.log(this._queue);
 	}
 
 }
