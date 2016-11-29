@@ -1,15 +1,25 @@
-class FlashCards {
+class Flashcards {
 
 	constructor() {
 		this._blocks = "ABCDEF".split('');
-		this.generator = new AlphabetGenerator();
-		this.generator.onBoop = () => this.readBlock();
 	}
 
-	readBlock() {
-		this.generator.keyString(
-			this._blocks[Math.floor(Math.random()*this._blocks.length)]
-		);
+	onBloop() {
+		this._answer = false;
+	}
+
+	guess(c) {
+		if (this._answer == false) return -1; // Answered too late.
+		return (this._answer == c.toUpperCase()) ? 1 : 0;
+	}
+
+	nextCard() {
+		var c = this._blocks[Math.floor(Math.random()*this._blocks.length)];
+		this._answer = c;
+		return {
+			char: c,
+			morse: MorseCodes[c]
+		};
 	}
 
 	addCharacter(c) {
