@@ -1,43 +1,70 @@
 class UI {
 
-	constructor(start, stop) {
+	constructor() {
+		this._handlers = {};
 		this.flashcard = new Flashcards();
 		window.addEventListener('keypress', (evt) => {
     		this.guessChar(evt.key);
 		});
+		this.handle('start', () => this.start());
+		this.handle('stop', () => this.stop());
 		this.generator = new AlphabetGenerator();
-		this.nextCard();
 		this._pass = 0;
 		this._fail = 0;
 	}
 
-	onGenerate() {
+	start() {
+		this._playing = true;
+		this.nextCard();
+	}
 
+	stop() {
+		this._playing = false;
+		this.generator.cancelQueue();
 	}
 
 	ui(name) {
-		return document.getElementById("ui_"+name);
+		return document.querySelector("[data-ui="+name+']');
+	}
+
+	handle(event, fun) {
+		if (!this._handlers[event]) this._handlers[event] = [];
+		this._handlers[event].push(fun);
+		delegate(
+			'*[data-event='+event+']',
+			'click',
+			(e) => {
+				this.call_handlers(event, e);
+				e.preventDefault();
+			}
+		);
+	}
+
+	call_handlers(event, e) {
+		if (!this._handlers[event]) return;
+		for (let f of this._handlers[event]) f(e);
 	}
 
 	nextCard() {
+		if (!this._playing) return;
 		this.ui('card').classList.remove('answer');
 		this.ui('card').classList.remove('morse');
-		var s = this.flashcard.nextCard();
-		this.renderNato(s.char);
-		this.renderMorse(s.morse);
+		var {char, morse} = this.flashcard.nextCard();
+		this.renderNato(char);
+		this.renderMorse(morse);
 		// Key and pause.
-		this.generator.key(s.char+'..', ()=> {
+		this.generator.key(char+'..', ()=> {
 			// Add Morse code.
 			this.ui('card').classList.add('morse');
 		});
 		// Key and pause.
-		this.generator.key(s.char+'..', ()=>{
+		this.generator.key(char+'..', ()=>{
 			// Show answer.
 			this.ui('card').classList.add('answer');
 		});
-		this.generator.spell(s.char); // Spell out answer.
+		this.generator.spell(char); // Spell out answer.
 		// Pause.
-		this.generator.spell('...', ()=>this.nextCard());
+		this.generator.spell('...', ()=> this.nextCard());
 	}
 
 	guessChar(char) {

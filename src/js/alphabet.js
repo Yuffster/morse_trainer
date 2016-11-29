@@ -81,6 +81,10 @@ class AlphabetGenerator  {
 		}
 	}
 
+	cancelQueue() {
+		this._queue = [];
+	}
+
 	pause(t) {
 		this._paused = true;
 		this._unpause_at = new Date().getTime() + t * 1000;

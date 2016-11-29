@@ -5,7 +5,7 @@
 
 <body class="active">
 
-<script src="js/events.js"></script>
+<script src="js/delegate.js"></script>
 <script src="js/morse.js"></script>
 <script src="js/alphabet.js"></script>
 <script src="js/flashcards.js"></script>
@@ -13,20 +13,20 @@
 
 <div class="controls">
 	<div class="on-off">
-		<a class="on" href="#start">Start</a>
-		<a class="off" href="#stop">Stop</a>
+		<a data-event="start" class="on" href="#start">Start</a>
+		<a data-event="stop" class="off" href="#stop">Stop</a>
 	</div>
 	<div class="score">
-		<span id="ui_pass" class="pass">0</span>
+		<span data-ui="pass" class="pass">0</span>
 		/
-		<span id="ui_fail" class="fail">0</span>
+		<span data-ui="fail" class="fail">0</span>
 	</div>
 </div>
 
 <div id="flashcards">
 
-	<div id="ui_card" class="card guess">
-		<div class="morse" id="ui_morse">
+	<div data-ui="card" class="card guess">
+		<div class="morse" data-ui="morse">
 			<span class="dot">.</span>
 			<span class="dot">.</span>
 			<span class="dash">&mdash;</span>
@@ -40,7 +40,7 @@
 				Press any key to guess.
 			</div>
 		</div>
-		<div class="answer" id="ui_answer"><em>F</em>oxtrot</div>
+		<div class="answer" data-ui="answer"><em>F</em>oxtrot</div>
 	</div>
 
 </div>
