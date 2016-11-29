@@ -87,13 +87,13 @@ class AlphabetGenerator  {
 	}
 
 	playChar(c, cb) {
-		c = c.toUpperCase();
-		this._next_callback = cb;
-		var m = c.match(/^M(.)/);
 		if (this._playing || this._paused || !this._audio_loaded) {
 			this._queue.push([c, cb]);
 			return;
-		} 
+		}
+		c = c.toUpperCase();
+		this._next_callback = cb;
+		var m = c.match(/^M(.)/);
 		if (m && m[1] !== '.') {
 			this.pause(this._morse.keyString(m[1]));
 			c = m[1];
