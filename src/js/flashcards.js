@@ -1,20 +1,24 @@
 class Flashcards {
 
 	constructor() {
-		this._blocks = "ABCDEF".split('');
+		this._weights = {};
+		this._decay_modifier = .95;
 	}
 
-	onBloop() {
-		this._answer = false;
-	}
-
-	guess(c) {
-		if (this._answer == false) return -1; // Answered too late.
-		return (this._answer == c.toUpperCase()) ? 1 : 0;
+	guess(c, speed=0) {
+		c = c.toUpperCase()
+		var correct = (this._answer == c);
+		if (correct) {
+			this._weights[this._answer] -= 3 - speed;
+		} else {
+			this._weights[this._answer] += speed + 3;
+		}
+		this.decayWeights();
+		return correct;
 	}
 
 	nextCard() {
-		var c = this._blocks[Math.floor(Math.random()*this._blocks.length)];
+		var c = this.pick();
 		this._answer = c;
 		return {
 			char: c,
@@ -26,9 +30,31 @@ class Flashcards {
 		return this._answer;
 	}
 
+	pick() {
+		var total = 0;
+		var ranges = [];
+		for (let k in this._weights) {
+			total += this._weights[k];
+			ranges.push([k, total]);
+		}
+		var n = Math.floor(Math.random()*total);
+		for (let r of ranges) {
+			let [k, range] = r;
+			if (range >= n) {
+				return k;
+			}
+		}
+	}
+
 	addCharacter(c) {
-		this._blocks.push(c.toUpperCase());
-		this.generator.keyString(c);
+		c = c.toUpperCase();
+		this._weights[c] = 10;
+	}
+
+	decayWeights() {
+		for (let k in this._weights) {
+			this._weights[k] = this._weights[k] * this._decay_modifier;
+		}
 	}
 
 }

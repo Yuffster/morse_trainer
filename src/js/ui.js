@@ -3,6 +3,7 @@ class UI {
 	constructor() {
 		this._handlers = {};
 		this.flashcard = new Flashcards();
+		for (let c of "GHIJKL") this.flashcard.addCharacter(c);
 		window.addEventListener('keypress', (evt) => {
     		this.guessChar(evt.key);
 		});
@@ -119,7 +120,6 @@ class UI {
 
 	pass(message) {
 		this.ui('pass').innerHTML = ++this._pass;
-		this.ui('card').classList.remove('fail');
 		this.ui('card').classList.add('pass');
 		this.generator.spell("...", () => this.nextCard());
 	}
@@ -127,7 +127,6 @@ class UI {
 	fail() {
 		this.ui('fail').innerHTML = ++this._fail;
 		this.ui('card').classList.add('fail');
-		this.ui('card').classList.remove('pass');
 		this.repeatCard(this.flashcard.answer);
 		this.generator.spell("...", () => this.nextCard());
 		this.clearStreaks();
