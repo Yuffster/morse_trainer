@@ -11,6 +11,8 @@ class UI {
 		this.generator = new AlphabetGenerator();
 		this._pass = 0;
 		this._fail = 0;
+		this._xstreak = 0;
+		this._gstreak = 0;
 		this._answered = false;
 		this._guess_stage = 0;
 	}
@@ -96,6 +98,7 @@ class UI {
 		var result = this.flashcard.guess(char);
 		var message = '';
 		if (result == 1) {
+			this.incrementStreaks();
 			message = {
 				'fast': 'Excellent!',
 				'repeat': 'Good.',
@@ -106,7 +109,7 @@ class UI {
 		else if (result == 0) {
 			this.fail();
 			message = {
-				'fast': 'Wrong.<br/>Remember take your time.',
+				'fast': 'Wrong.<br/>Remember to take your time.',
 				'repeat': "Wrong.",
 				'answer': "Wrong."
 			}[this.guessStage];
@@ -121,21 +124,27 @@ class UI {
 		this.generator.spell("...", () => this.nextCard());
 	}
 
-	fail(message) {
+	fail() {
 		this.ui('fail').innerHTML = ++this._fail;
 		this.ui('card').classList.add('fail');
 		this.ui('card').classList.remove('pass');
-		this.generator.spell(this.flashcard.answer);
-		this.generator.key(this.flashcard.answer+'.');
-		this.generator.key(this.flashcard.answer+'.');
-		this.generator.spell(this.flashcard.answer);
-		this.generator.key(this.flashcard.answer);
-		this.generator.spell(this.flashcard.answer);
-		this.generator.key(this.flashcard.answer);
-		this.generator.spell(this.flashcard.answer);
-		this.generator.key(this.flashcard.answer);
-		this.generator.key(this.flashcard.answer);
+		this.repeatCard(this.flashcard.answer);
 		this.generator.spell("...", () => this.nextCard());
+		this.clearStreaks();
+	}
+
+	repeatCard(char) {
+		this.generator.spell(char);
+		this.generator.key(char+'.');
+		this.generator.key(char+'.');
+		this.generator.spell(char);
+		this.generator.key(char);
+		this.generator.spell(char);
+		this.generator.key(char);
+		this.generator.spell(char);
+		this.generator.key(char);
+		this.generator.key(char);
+		this.generator.key(char);
 	}
 
 	alert(message) {
@@ -152,6 +161,26 @@ class UI {
 			html += row;
 		}
 		this.ui('morse').innerHTML = html;
+	}
+
+	incrementStreaks() {
+		var g = this._guess_stage;
+		if (g < 2) {
+			this._xstreak++;
+			this._gstreak++;
+		} else if (g == 2) {
+			this._xstreak = 0;
+			this._gstreak++;
+		}
+		this.ui('xstreak').innerHTML = this._xstreak;
+		this.ui('gstreak').innerHTML = this._gstreak;
+	}
+
+	clearStreaks() {
+		this._xstreak = 0;
+		this._gstreak = 0;
+		this.ui('xstreak').innerHTML = this._xstreak;
+		this.ui('gstreak').innerHTML = this._gstreak;
 	}
 
 	renderNato(c) {
