@@ -19,10 +19,12 @@ class UI {
 		this._guess_stage = 0;
 		this._character_streaks = {};
 		this._newest_character = '';
+		this._level = 0;
 		this.addCharacter();
 	}
 
 	addCharacter() {
+		this._level++;
 		var c = this._letters.shift();
 		this._newest_character = c;
 		this._character_streaks[c.toUpperCase()] = 0;
@@ -74,6 +76,7 @@ class UI {
 		if (!this._playing) return;
 		this._answered = false;
 		this._guess_stage = 0;
+		this.ui('level').innerHTML = this._level;
 		this.ui('card').classList.remove('answer');
 		this.ui('card').classList.remove('morse');
 		this.ui('card').classList.remove('pass');
