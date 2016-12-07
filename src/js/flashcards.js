@@ -48,12 +48,13 @@ class Flashcards {
 
 	addCharacter(c) {
 		c = c.toUpperCase();
-		this._weights[c] = 10;
+		this._weights[c] = 100;
 	}
 
 	decayWeights() {
 		for (let k in this._weights) {
-			this._weights[k] = this._weights[k] * this._decay_modifier;
+			var w = this._weights[k] * this._decay_modifier;
+			this._weights[k] = (w>0) ? w : 0;
 		}
 	}
 

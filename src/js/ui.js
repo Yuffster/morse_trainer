@@ -3,7 +3,7 @@ class UI {
 	constructor() {
 		this._handlers = {};
 		this.flashcard = new Flashcards();
-		for (let c of "GHIJKL") this.flashcard.addCharacter(c);
+		this._letters = "ETAINOSHRDLUCMFWYGPBVKQJXZ".split("");
 		window.addEventListener('keypress', (evt) => {
     		this.guessChar(evt.key);
 		});
@@ -13,9 +13,20 @@ class UI {
 		this._pass = 0;
 		this._fail = 0;
 		this._xstreak = 0;
+		this._streak_target = 5;
 		this._gstreak = 0;
 		this._answered = false;
 		this._guess_stage = 0;
+		this._character_streaks = {};
+		this._newest_character = '';
+		this.addCharacter();
+	}
+
+	addCharacter() {
+		var c = this._letters.shift();
+		this._newest_character = c;
+		this._character_streaks[c.toUpperCase()] = 0;
+		this.flashcard.addCharacter(c);
 	}
 
 	get guessStage() {
@@ -105,6 +116,7 @@ class UI {
 				'repeat': 'Good.',
 				'answer': "Ok."
 			}[this.guessStage];
+			this._character_streaks[char.toUpperCase()]++;
 			this.pass();
 		}
 		else if (result == 0) {
@@ -114,6 +126,7 @@ class UI {
 				'repeat': "Wrong.",
 				'answer': "Wrong."
 			}[this.guessStage];
+			this._character_streaks[char.toUpperCase()] = 0;
 		}
 		this.ui('guesstime').innerHTML = message || '';
 	}
@@ -173,6 +186,17 @@ class UI {
 		}
 		this.ui('xstreak').innerHTML = this._xstreak;
 		this.ui('gstreak').innerHTML = this._gstreak;
+		if (this.newestStreak >= this._streak_target) {
+			this.addCharacter();
+		}
+	}
+
+	getCharStreak(c) {
+		return this._character_streaks[c.toUpperCase()] || 0;
+	}
+
+	get newestStreak() {
+		return this.getCharStreak(this._newest_character);
 	}
 
 	clearStreaks() {
