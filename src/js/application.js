@@ -1,7 +1,10 @@
+var ui = new UI();
+
 window.addEventListener('blur', function() {
 	var cl = document.body.classList;
 	cl.add('inactive');
 	cl.remove('active');
+	ui.stop();
 });
 
 window.addEventListener('focus', function(){
@@ -9,5 +12,3 @@ window.addEventListener('focus', function(){
 	cl.add('active');
 	cl.remove('inactive');
 });
-
-var ui = new UI();
