@@ -41,11 +41,15 @@ class UI {
 	}
 
 	start() {
+		console.log('start');
+		document.body.classList.add('playing');
 		this._playing = true;
 		this.nextCard();
 	}
 
 	stop() {
+		console.log('stop')
+		document.body.classList.remove('playing');
 		this._playing = false;
 		this.generator.cancelQueue();
 	}

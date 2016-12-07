@@ -1,4 +1,9 @@
+body {
+	font-family: sans-serif;
+}
+
 .card {
+	font-family: serif;
 	text-align: center;
 }
 
@@ -33,6 +38,47 @@ body.active .card .guess .inactive {
 
 body.inactive .card .guess .pressKey {
 	display: none;
+}
+
+body.playing .on-off .on {
+	display: none;
+}
+
+body .on-off .off {
+	display: none;
+}
+
+body.playing .on-off .off {
+	display: block;
+}
+
+.level {
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	font-family: sans-serif;
+}
+
+.level span {
+	font-weight: bold;
+	font-size: 200%;
+	display: block;
+}
+
+.streaks {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	text-align: center;
+}
+
+.streaks h3,.streaks p {
+	display: inline-block;
+}
+
+.streaks p span {
+	display: block;
 }
 
 .card.answer .answer,.card.morse .morse,.card.guess .guess {
